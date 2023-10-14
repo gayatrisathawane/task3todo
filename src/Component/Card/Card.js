@@ -1,4 +1,4 @@
-const Card = ({id,name,surname,address,removeData}) =>{
+const Card = ({id,name,surname,address,removeData,editData}) =>{
     return (
        <div>
         <div className="card p-2 m-3">
@@ -11,7 +11,9 @@ const Card = ({id,name,surname,address,removeData}) =>{
             }}>🗑</p>
 
 
-            <p>✏</p>
+            <p onClick={()=>{
+                editData(id)
+            }}>✏</p>
 
         </div>
 

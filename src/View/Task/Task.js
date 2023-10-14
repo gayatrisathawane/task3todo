@@ -1,16 +1,17 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Card from './../../Component/Card/Card'
 
 const Task = () => {
 
     const [dataList ,setDataList]= useState([
         {
+            id:1,
             name:"gayatri",
             surname:"sathawane",
             address:"pune"
 
         },
-        {
+        {    id:2,
             name:"Nilam",
             surname:"sathawane",
             address:"Warathi"
@@ -19,7 +20,9 @@ const Task = () => {
 ])
 
 // input fields value
-
+const [id ,setId]=useState(0)
+console.log(id)
+const[edit,setEdit]=useState(false);
 const[name,setName]=useState('');
 const[surname,setSurname]=useState('')
 const[address,setAddress]=useState('')
@@ -27,10 +30,25 @@ const[address,setAddress]=useState('')
 
 //add Data
 
-const  randomId = Math.floor(Math.random()*100)
-console.log(randomId)
 
+
+useEffect(()=>{
+    
+    const list = JSON.parse(localStorage.getItem('todolist'))
+    // if(list && list >0 ){
+    //   setDataList(list)
+    // }
+
+    setDataList(list)
+
+},[])
+
+const saveToLocalStorage = (task)=>{
+   localStorage.setItem('todolist',JSON.stringify(task))
+}
+const  randomId = Math.floor(Math.random()*1000)
 const addData = () =>{
+   
     const obj = {
         id:randomId,
         name:name,
@@ -38,7 +56,13 @@ const addData = () =>{
         address:address
     }
 
-    setDataList([...dataList,obj])
+    const newarray = [...dataList,obj]
+setDataList(newarray)
+    saveToLocalStorage(newarray)
+
+    setName('')
+    setSurname('')
+    setAddress('')
 }
 
 //remove data 
@@ -57,9 +81,35 @@ const removeData = (id) =>{
    const temarray = dataList
    temarray.splice(index ,1)
     setDataList([...temarray])
-
+ saveToLocalStorage(temarray)
 
 }
+
+//edit data 
+
+const editData = (id) =>{
+    console.log(id)
+
+    setEdit(true)
+    setId(id)
+  
+    let currentData;
+
+    dataList.forEach((task,i)=>{
+       if(task.id==id)
+       {
+        currentData=task;
+       }
+    })
+    
+      setName(currentData.name)
+      setSurname(currentData.surname)
+      setAddress(currentData.address)
+
+}
+
+
+
 
 
     return (
@@ -69,7 +119,7 @@ const removeData = (id) =>{
 
             <div className="d-flex justify-content-around mt-4">
                 <div>
-                    <h1>ADD STUDENT DATA</h1>
+                    <h1>{edit ?"UPDATE STUDENT DATA":"ADD STUDENT DATA"}</h1>
 
                     <div class="input-group mb-3 mt-5">
               <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
@@ -96,8 +146,10 @@ const removeData = (id) =>{
                  </div>
 
                   <div className=" d-flex justify-content-around">
-                  <button type="button" onClick={addData}>Add Data</button>
-                  <button>Update Data</button>
+                    {edit ? <button>Update Data</button> : 
+                    <button type="button" onClick={addData}>Add Data</button> }
+                 
+                 
 
                   </div>
                 
@@ -111,11 +163,19 @@ const removeData = (id) =>{
                 <div>
                     <h1>SHOW DATA</h1>
 
+                   
+
                     {
                         dataList.map((data,i)=>{
-                            const {name,surname,address} = data
+                            const {name,surname,address,id} = data
                             return(
-                               <Card name={name} surname={surname} address={address} removeData={removeData}/>
+                               <Card name={name} 
+                               surname={surname} 
+                               address={address} 
+                               removeData={removeData} 
+                               key={i}  
+                               editData={editData}
+                               id={id}/>
                             )
                         })
                     }
