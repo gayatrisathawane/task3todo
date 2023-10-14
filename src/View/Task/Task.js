@@ -35,11 +35,11 @@ const[address,setAddress]=useState('')
 useEffect(()=>{
     
     const list = JSON.parse(localStorage.getItem('todolist'))
-    // if(list && list >0 ){
-    //   setDataList(list)
-    // }
+    if(list && list >0 ){
+      setDataList(list)
+    }
 
-    setDataList(list)
+    // setDataList(list)
 
 },[])
 
@@ -109,6 +109,38 @@ const editData = (id) =>{
 }
 
 
+//update data 
+
+const  updateData = () =>{
+    let indexUpdate ;
+
+    dataList.forEach((task,i)=>{
+
+        indexUpdate = i
+
+    })
+
+    const temparray = dataList
+
+    temparray[indexUpdate]={
+        name:name,
+        surname:surname,
+        address:address
+    }
+    setDataList([...temparray])
+
+    saveToLocalStorage(temparray)
+
+    setAddress('')
+    setName('')
+    setSurname('')
+    setEdit(false)
+
+}
+
+
+
+
 
 
 
@@ -146,7 +178,7 @@ const editData = (id) =>{
                  </div>
 
                   <div className=" d-flex justify-content-around">
-                    {edit ? <button>Update Data</button> : 
+                    {edit ? <button type="button" onClick={updateData}>Update Data</button> : 
                     <button type="button" onClick={addData}>Add Data</button> }
                  
                  
