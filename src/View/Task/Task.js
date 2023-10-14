@@ -27,8 +27,12 @@ const[address,setAddress]=useState('')
 
 //add Data
 
+const  randomId = Math.floor(Math.random()*100)
+console.log(randomId)
+
 const addData = () =>{
     const obj = {
+        id:randomId,
         name:name,
         surname:surname,
         address:address
@@ -39,7 +43,23 @@ const addData = () =>{
 
 //remove data 
 
+const removeData = (id) =>{
 
+    let index;
+
+   dataList.forEach((task,i)=>{
+    if(task.id==id)
+    {
+        index=i
+    }
+   })
+
+   const temarray = dataList
+   temarray.splice(index ,1)
+    setDataList([...temarray])
+
+
+}
 
 
     return (
@@ -95,7 +115,7 @@ const addData = () =>{
                         dataList.map((data,i)=>{
                             const {name,surname,address} = data
                             return(
-                               <Card name={name} surname={surname} address={address} />
+                               <Card name={name} surname={surname} address={address} removeData={removeData}/>
                             )
                         })
                     }
